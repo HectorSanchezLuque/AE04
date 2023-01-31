@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>AE04</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function getCartaInfo() {
+            var nomCarta = document.getElementById('nCarta').value;
+            axios
+                .get("https://api.magicthegathering.io/v1/cards?name=" + nomCarta)
+                .then(response => {
+                    console.log(response.data);
+                    document.getElementById('name').value = response.data.cards[0].name;
+                    // document.getElementById('descripcio').value = response.data.cards[0].text;
+                    // document.getElementById('tipus').value = response.data.cards[0].type;
+                    // document.getElementById('color').value = response.data.cards[0].colorIdentity[0];
+                    // document.getElementById('cost').value = response.data.cards[0].manaCost;
+                    // // document.getElementById('power').value = response.data.cards[0].power;
+                    // document.getElementById('resistencia').value = response.data.cards[0].toughness;
+                    document.getElementById('image').src = response.data.cards[0].imageUrl;
+                    document.getElementById('image').style.display = "block";
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.getElementById('strDiscography').value = "ERROR EN LA CONSULTA: " + error;
+                    document.getElementById('image').style.display = "none";
+                });
+
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript">
+        function guardar() {
+            $.ajax({
+                type: "POST", //metode POST per a enviar dades al servidor
+                url: "guardar.php", // ruta del fitxer PHP del servidor
+                data: {name:name, descripcio:descripcio, tipus:tipus, color:color, cost:cost, power:power, resistencia:resistencia, image:image},// dades a enviar (p.ex. {valor:valor, nom:nom})
+                success: function (response) { //resultat del PHP del servidor
+                    alert(response);
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Buscador de cartes de Magic the Gathering</h1>
+    <p>Carta:</p>
+    <p><input type="text" value="" id="nCarta">
+        <button id="botonBuscar" onclick="getCartaInfo()">Buscar</button>
+    </p>
+    <img id="image" src="" height="300" style="display:inside;" />
+    <p>Nom de la carta: </p>
+    <p id="name"></p>
+    <p>Descripció:</p>
+    <p>Tipus:</p>
+    <p>Color:</p>
+    <p>Cost:</p>
+    <p>Poder:</p>
+    <p>Resistencia:</p>
+    <p><button id="botonGuardar" onclick="guardar()">Guardar</button></p>
+</body>
+
+</html>
