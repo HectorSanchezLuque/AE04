@@ -1,9 +1,9 @@
 <?php
-if (isset($_POST["valor"])) {
+if (isset($_POST["name"])) {
     $servidor = "localhost";
     $usuario = "root";
     $password = "";
-    $dbname = "prueba";
+    $dbname = "ae04";
     $conexion = mysqli_connect($servidor, $usuario, $password, $dbname);
 
     $name = $_POST["name"];
@@ -13,7 +13,7 @@ if (isset($_POST["valor"])) {
     $cost = $_POST["cost"];
     $power = $_POST["power"];
     $resistencia = $_POST["resistencia"];
-    $image = $_POST["image"];
+    $image = $_POST["photo"];
 
     if (!$conexion) {
         echo "Error en la conexion a MySQL: " . mysqli_connect_error();
@@ -22,7 +22,9 @@ if (isset($_POST["valor"])) {
     $sql = "INSERT INTO cartes (nom, descripcio, tipus, color, cost, poder, resistencia, foto) VALUES ('$name', '$descripcio', '$tipus', '$color', '$cost,' '$power', '$resistencia', '$image');";
     if (mysqli_query($conexion, $sql)) {
         echo "Registro insertado correctamente.";
+        echo "<br><a href='index.html'>Volver</a>";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($conexion);
+        echo "<br><a href='index.html'>Volver</a>";
     }
 }
