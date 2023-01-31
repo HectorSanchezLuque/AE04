@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,33 +7,53 @@
     <title>AE04</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+        // Funció per a buscar les dades e insertar-les en una variable en formato JSON
+        function datos() {
+
+            let nom = document.getElementById("name").innerHTML
+            nom = nom.replace(/[']/g, '');
+            let descripcio = document.getElementById("descripcio").innerHTML
+            descripcio = descripcio.replace(/[\n\r]/g, '');
+            descripcio = descripcio.replace(/[']/g, '');
+            let tipus = document.getElementById("tipus").innerHTML
+            tipus = tipus.replace(/[']/g, '');
+            let color = document.getElementById("color").innerHTML
+            let cost = document.getElementById("cost").innerHTML
+            let power = document.getElementById("power").innerHTML
+            let resistencia = document.getElementById("resistencia").innerHTML
+            let image = document.getElementById("photo").innerHTML
+
+            const d = JSON.parse('{ "nom" : "' + nom + '",' + '"descripcio" : "' + descripcio + '",' + '"tipus" : "' + tipus + '",' + '"color" : "' + color + '",' + '"cost" : "' + cost + '",' + '"power" : "' + power + '",' + '"resistencia" : "' + resistencia + '",' + '"image" : "' + image + '"}');
+            return d;
+        }
+        // Funció per a fer una petició a la API i mostrar en el HTML les dades
         function getCartaInfo() {
             var nomCarta = document.getElementById('nCarta').value;
             axios
                 .get("https://api.magicthegathering.io/v1/cards?name=" + nomCarta)
                 .then(response => {
                     console.log(response.data);
-                    document.write('<form id="form1" name="form1" method="post" action="guardar.php">')
                     document.write('<p id = "photo" hidden>', response.data.cards[0].imageUrl, '</p>')
                     document.write('<img id = "image" src = "response.data.cards[0].imageUrl" height="300" style="display:inside;" />')
-                    document.write('<p>Nom:</p>')
+                    document.write('<p><b>Nom:</b></p>')
                     document.write('<p id = "name">', response.data.cards[0].name, '</p>');
-                    document.write('<p>Descripció:</p>')
+                    document.write('<p><b>Descripció:</b></p>')
                     document.write('<p id = "descripcio">', response.data.cards[0].text, '</p>');
-                    document.write('<p>Tipus:</p>')
+                    document.write('<p><b>Tipus:</b></p>')
                     document.write('<p id = "tipus">', response.data.cards[0].type, '</p>');
-                    document.write('<p>Color:</p>')
+                    document.write('<p><b>Color:</b></p>')
                     document.write('<p id = "color">', response.data.cards[0].colorIdentity[0], '</p>');
-                    document.write('<p>Cost de maná:</p>')
+                    document.write('<p><b>Cost de maná:</b></p>')
                     document.write('<p id = "cost">', response.data.cards[0].manaCost, '</p>');
-                    document.write('<p>Poder:</p>')
+                    document.write('<p><b>Poder:</b></p>')
                     document.write('<p id = "power">', response.data.cards[0].power, '</p>');
-                    document.write('<p>Resistencia:</p>')
+                    document.write('<p><b>Resistencia:</b></p>')
                     document.write('<p id = "resistencia">', response.data.cards[0].toughness, '</p>');
                     document.getElementById('image').src = response.data.cards[0].imageUrl;
                     document.getElementById('image').style.display = "block";
-                    document.write('<p><input type="submit" name="guardar" id="guardar" value="guardar"/></p>');
-                    document.write('</form>')
+                    document.write('<p><button id="botonGuardar" onclick="guardar()">Guardar</button></p>')
+                    document.getElementById("name").value = response.data.cards[0].name;
+                    document.getElementById("descripcio").value = response.data.cards[0].text;
                 })
                 .catch(error => {
                     console.error(error);
@@ -43,14 +62,18 @@
                 });
 
         }
+
+
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script type="text/javascript">
+        // Funció per a guardar les dades en la base de dades
         function guardar() {
+            var data = datos();
             $.ajax({
                 type: "POST", //metode POST per a enviar dades al servidor
-                url: "guardar", // ruta del fitxer PHP del servidor
-                data: { name: name, descripcio: descripcio, tipus: tipus, color: color, cost: cost, power: power, resistencia: resistencia, photo: photo },// dades a enviar (p.ex. {valor:valor, nom:nom})
+                url: "guardar.php", // ruta del fitxer PHP del servidor
+                data: data,
                 success: function (response) { //resultat del PHP del servidor
                     alert(response);
                 },
